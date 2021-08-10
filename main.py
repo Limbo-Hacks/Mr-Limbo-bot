@@ -81,6 +81,16 @@ async def on_message(message):
 
     if message.author.name in user_names:
        await message.add_reaction(Custom_emojis.get(message.author.name))
+
+    # Direct links of limbohacks for easy access with '!' prefix
+    if message.content.startswith('!website'):
+      await message.channel.send("https://limbohacks.tech/")
+
+    if message.content.startswith('!devpost'):
+      await message.channel.send("https://limbo-hacks-12968.devpost.com/")
+
+    if message.content.startswith('!discord'):
+      await message.channel.send("https://discord.com/invite/8XJSzmtWPp")
        
     #Getting message sentiment
     if message.channel.id!=873538964689149963:
