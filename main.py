@@ -21,6 +21,7 @@ words_response = [
     "Yes Honey $"
 ]
 
+# Dont mess with this names
 Sentiments = [
     "Happy",
     "Sad",
@@ -53,12 +54,11 @@ def check_sentiment(message):
   else:
      return 0;    
 
-
-
+# Turn this to true if you dont want sentiment analysis
+disable_sentiment_analysis = False;
 
 @client.event
 async def on_ready():
-
   for name in user_names:
     Custom_emojis[name] = discord.utils.get(client.emojis, name=name)
   for sentiment in Sentiments:
@@ -81,7 +81,7 @@ async def on_message(message):
 
     if message.author.name in user_names:
        await message.add_reaction(Custom_emojis.get(message.author.name))
-
+       
     #Getting message sentiment
     if message.channel.id!=873538964689149963:
       result = check_sentiment(text)
