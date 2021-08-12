@@ -2,11 +2,16 @@ import discord
 import random
 import os
 import paralleldots
+from datetime import datetime
 
 
 client = discord.Client()
 sentiment_API = os.environ['SENTIMENT_API']
 paralleldots.set_api_key(sentiment_API)
+
+# Submission timeout   (hours and minutes need to update later accordingly)
+PYCON_DATE = datetime(year=2021, month=11, day=21, hour=5, minute=30)
+countdown = PYCON_DATE - datetime.now().replace(microsecond=0)
 
 # Bot will only work on these channels
 Bot_Channels=[
@@ -18,7 +23,8 @@ Bot_Channels=[
   857549492324139059,
   863495216467804220,
   874356441069269032,
-  874630819388473344
+  874630819388473344,
+  870532018054783027
 ]
 
 
@@ -100,7 +106,9 @@ async def on_message(message):
     # Direct links of limbohacks for easy access with '!' prefix
     await auto_response(text.startswith('!website'),message,"https://limbohacks.tech/")
     await auto_response(text.startswith('!devpost'),message,"https://limbo-hacks-12968.devpost.com/")
-    await auto_response(text.startswith('!discord'),message,"https://discord.com/invite/8XJSzmtWPp")       
+    await auto_response(text.startswith('!discord'),message,"https://discord.com/invite/8XJSzmtWPp")   
+    await auto_response(text.startswith('!time'), message, f"⏳ {countdown} Time left for the submission ⏳")
+    
     #Getting message sentiment
     result = check_sentiment(text)
     await auto_react(result,message,sentiment_emojis.get(result))
