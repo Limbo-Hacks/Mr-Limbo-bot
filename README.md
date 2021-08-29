@@ -11,7 +11,11 @@
 
 </p>
 
-![](https://github.com/Abusayid693/Mr-Limbo-bot/blob/master/Images_/Frame%2047.png)
+
+<p align="center">
+  <a href=""><img alt="Mr limbo Bot" title="limbo Bot" src="https://github.com/Abusayid693/Mr-Limbo-bot/blob/master/Images_/Frame%2047.png" width="400" align="center"></a>
+</p>
+
 
 A discord bot for autoreactions and other for Limbo hacks server 
 
