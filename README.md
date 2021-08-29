@@ -1,4 +1,18 @@
 # Mr. Limbo
+<p>
+
+<img src="https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=darkgreen"/>
+
+<img src="https://img.shields.io/badge/replit-667881?style=for-the-badge&logo=replit&logoColor=white"/>
+
+<img src="https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white"/>
+
+<img src="https://img.shields.io/discord/827113564564750366.svg?style=for-the-badge">
+
+</p>
+
+![](https://github.com/Abusayid693/Mr-Limbo-bot/blob/master/Images_/Frame%2047.png)
+
 A discord bot for autoreactions and other for Limbo hacks server 
 
 Should you have any questions, please join the [Discord]( https://discord.com/invite/8XJSzmtWPp) and ask in `#Mr Limbo`
