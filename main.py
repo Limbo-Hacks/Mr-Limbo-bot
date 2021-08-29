@@ -322,9 +322,9 @@ async def football(ctx):
     if computerOption=='LEFT':
         return('.🧍‍♂️')
     if computerOption=='MIDDLE':
-        return ('.....🧍‍♂️......')
+        return ('⁃⁃⁃⁃⁃⁃🧍‍♂️⁃⁃⁃⁃⁃')
     if computerOption=='RIGHT':
-        return ('.............🧍‍♂️')
+        return ('⁃⁃⁃⁃⁃⁃⁃⁃⁃⁃⁃⁃🧍‍♂️')
 
   yet = discord.Embed(title=f"{ctx.author.display_name}'s PENALTY SHOOTOUT GAME",description=">status: Waiting for a click , 5 sec left" )
   yet.add_field(name=".🥅    🥅    🥅", value=goal() , inline=False)
