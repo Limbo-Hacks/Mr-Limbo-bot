@@ -19,8 +19,9 @@
   <a href=""><img alt="Mr limbo Bot" title="limbo Bot" src="https://github.com/Abusayid693/Mr-Limbo-bot/blob/master/Images_/Frame%2047.png" width="400" align="center"></a>
 </p>
 
-
-A discord bot for autoreactions and other for Limbo hacks server 
+<p align="center">
+A discord bot for autoreactions and other fun stuffs for Limbo hacks server 
+</p>
 
 Should you have any questions, please join the [Discord]( https://discord.com/invite/8XJSzmtWPp) and ask in `#Mr Limbo`
 
