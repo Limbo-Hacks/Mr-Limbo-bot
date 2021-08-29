@@ -126,8 +126,9 @@ async def on_message(message):
 
     await client.process_commands(message) # This line makes your other commands work.
     #Getting message sentiment
-    result = check_sentiment(text)
-    await auto_react(result and message.channel.id!=881582264419500032,message,sentiment_emojis.get(result))
+    if message.channel.id!=881582264419500032:
+      result = check_sentiment(text)
+      await auto_react(result ,message,sentiment_emojis.get(result))
      
 async def auto_response(condition,message,content):
   if condition:
