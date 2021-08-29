@@ -16,7 +16,7 @@
 
 
 <p align="center">
-  <a href=""><img alt="Mr limbo Bot" title="limbo Bot" src="https://github.com/Abusayid693/Mr-Limbo-bot/blob/master/Images_/Frame%2047.png" width="400" height ="400" align="center"></a>
+  <a href=""><img alt="Mr limbo Bot" title="limbo Bot" src="https://github.com/Abusayid693/Mr-Limbo-bot/blob/master/Images_/Frame%2047.png" width="400" height ="430" align="center"></a>
 </p>
 
 <p align="center">
