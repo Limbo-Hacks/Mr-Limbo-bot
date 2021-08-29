@@ -27,7 +27,7 @@ countdown = PYCON_DATE - datetime.now().replace(microsecond=0)
 
 # Bot will only work on these channels
 Bot_Channels=[
-  881169094454419496, #mine for test
+  881169094454419496, # Write your gaming channel id here
   857549642934124545,
   857569486303264768,
   857551907714760704,
@@ -141,6 +141,9 @@ async def auto_react(condition,message,content):
 
 @client.command()
 async def games(ctx):
+  if ctx.message.channel.id != 881169094454419496:       #Please change this id to your game channel id
+    await ctx.reply("Please go to gaming channel, I am waiting there...")
+    return
   Game=['**!bonk\n**:> play Whac-A-Mole\n !bonk @member\n !bonk @member @member #for 3 players\n','**!rps\n**:> play Rock Paper Scissors\n','**!guess\n**:> Can you guess which colour is it ?\n','**!amongus\n**:> shhhhhhhhh!\n','**!football\n**:> Wanna goal ?']
   game=discord.Embed(title='Games', description =''.join(Game),color=0x3498db)
   await ctx.send(embed=game)
@@ -148,6 +151,9 @@ async def games(ctx):
 #=================AMONG US==============
 @client.command()
 async def amongus(ctx):
+    if ctx.message.channel.id != 881169094454419496:          #Please change this id to your game channel id
+      await ctx.reply("Please go to gaming channel, I am waiting there...")
+      return
     ch=['Blue ඞ','Green ඞ','Red ඞ','grey ඞ']
     comp=random.choice(ch)
 
@@ -185,6 +191,9 @@ async def amongus(ctx):
 #=============Rock Paper Scissors========
 @client.command()
 async def rps(ctx):
+    if ctx.message.channel.id != 881169094454419496:             #Please change this id to your game channel id
+      await ctx.reply("Please go to gaming channel, I am waiting there...")
+      return
     ch1 = ["Rock","Scissors","Paper"]
     comp = random.choice(ch1)
   
@@ -245,6 +254,9 @@ async def rps(ctx):
 #=========Whac-A-Mole===========
 @client.command(aliases=["wam", "whac"])
 async def bonk(ctx, member : discord.Member=None, member1 : discord.Member=None):
+  if ctx.message.channel.id != 881169094454419496:            #Please change this id to your game channel id
+    await ctx.reply("Please go to gaming channel, I am waiting there...")
+    return
   await ctx.reply('```By default quit time is 10 sec of inactivity```')
   points = {ctx.author: 0, member: 0,member1: 0}
   random_time = random.randrange(5,25)
@@ -301,6 +313,9 @@ async def bonk(ctx, member : discord.Member=None, member1 : discord.Member=None)
 #=============Football========
 @client.command()
 async def football(ctx):
+  if ctx.message.channel.id != 881169094454419496:        #Please change this id to your game channel id
+    await ctx.reply("Please go to gaming channel, I am waiting there...")
+    return
   options=["LEFT",'MIDDLE','RIGHT']
   computerOption = random.choice(options)
   def goal():
@@ -346,6 +361,9 @@ async def football(ctx):
 #=======GUESS===========
 @client.command()
 async def guess(ctx):
+    if ctx.message.channel.id != 881169094454419496:        #Please change this id to your game channel id
+      await ctx.reply("Please go to gaming channel, I am waiting there...")
+      return
     ch=['Blue','Green','Red']
     comp=random.choice(ch)
     
