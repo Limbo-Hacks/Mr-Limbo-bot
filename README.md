@@ -1,5 +1,27 @@
-# Mr. Limbo
-A discord bot for autoreactions and other for Limbo hacks server 
+
+
+<h1 align="center">Mr Limbo bot</h1>
+
+<p align="center">
+
+<img src="https://img.shields.io/badge/Python-FFD43B?style=for-the-badge&logo=python&logoColor=darkgreen"/>
+
+<img src="https://img.shields.io/badge/replit-667881?style=for-the-badge&logo=replit&logoColor=white"/>
+
+<img src="https://img.shields.io/badge/Discord-7289DA?style=for-the-badge&logo=discord&logoColor=white"/>
+
+<img src="https://img.shields.io/discord/827113564564750366.svg?style=for-the-badge">
+
+</p>
+
+
+<p align="center">
+  <a href=""><img alt="Mr limbo Bot" title="limbo Bot" src="https://github.com/Abusayid693/Mr-Limbo-bot/blob/master/Images_/Frame%2047.png" width="400" height ="430" align="center"></a>
+</p>
+
+<p align="center">
+A discord bot for autoreactions and other fun stuffs for Limbo hacks server 
+</p>
 
 Should you have any questions, please join the [Discord]( https://discord.com/invite/8XJSzmtWPp) and ask in `#Mr Limbo`
 
@@ -15,3 +37,6 @@ Should you have any questions, please join the [Discord]( https://discord.com/in
 10. Make the key `SENTIMENT_API` and paste your token in value and then press `Add new secret`. (For SENTIMENT_API you can ask Admin a public key)
 11. Run the bot, it should now be online!
 12. Take whatever code you changed and submit a pull request! When you forked it on Replit, it should create a fork in GitHub, so by using the version control tab in the left, you can contribute.
+
+---
+

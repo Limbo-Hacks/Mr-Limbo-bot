@@ -31,7 +31,7 @@ countdown = PYCON_DATE - datetime.now().replace(microsecond=0)
 
 # Bot will only work on these channels
 Bot_Channels=[
-  881169094454419496, # Write your gaming channel id here
+  881582264419500032, # Write your gaming channel id here
   857549642934124545,
   857569486303264768,
   857551907714760704,
@@ -131,8 +131,9 @@ async def on_message(message):
 
     await client.process_commands(message) # This line makes your other commands work.
     #Getting message sentiment
-    result = check_sentiment(text)
-    await auto_react(result,message,sentiment_emojis.get(result))
+    if message.channel.id!=881582264419500032:
+      result = check_sentiment(text)
+      await auto_react(result ,message,sentiment_emojis.get(result))
      
 async def auto_response(condition,message,content):
   if condition:
@@ -217,7 +218,7 @@ def see(users):
 #================GAMES=================
 @client.command()
 async def games(ctx):
-  if ctx.message.channel.id != 881169094454419496:       #Please change this id to your channel id
+  if ctx.message.channel.id != 881582264419500032:       #Please change this id to your game channel id
     await ctx.reply("Please go to gaming channel, I am waiting there...")
     return
   Game=['**!bonk\n**:> play Whac-A-Mole\n !bonk @member\n !bonk @member @member #for 3 players\n','**!rps\n**:> play Rock Paper Scissors (2 points)\n','**!guess\n**:> Can you guess which colour is it ?(1 point)\n','**!amongus\n**:> shhhhhhhhh!(1 point)\n','**!football\n**:> Wanna goal ?(2 points)\n','**!quiz\n**:> Answer Answer Answer whooo...(3 points)\n']
@@ -232,7 +233,7 @@ async def games(ctx):
 #=================AMONG US==============
 @client.command()
 async def amongus(ctx):
-    if ctx.message.channel.id != 881169094454419496:          #Please change this id to your channel id
+    if ctx.message.channel.id != 881582264419500032:          #Please change this id to your game channel id
       await ctx.reply("Please go to gaming channel, I am waiting there...")
       return
     ch=['Blue ඞ','Green ඞ','Red ඞ','grey ඞ']
@@ -279,7 +280,7 @@ async def amongus(ctx):
 #=============Rock Paper Scissors========
 @client.command()
 async def rps(ctx):
-    if ctx.message.channel.id != 881169094454419496:             #Please change this id to your channel id
+    if ctx.message.channel.id != 881582264419500032:             #Please change this id to your game channel id
       await ctx.reply("Please go to gaming channel, I am waiting there...")
       return
     ch1 = ["Rock","Scissors","Paper"]
@@ -364,7 +365,7 @@ async def rps(ctx):
 #=========Whac-A-Mole===========
 @client.command(aliases=["wam", "whac"])
 async def bonk(ctx, member : discord.Member=None, member1 : discord.Member=None):
-  if ctx.message.channel.id != 881169094454419496:            #Please change this id to your channel id
+  if ctx.message.channel.id != 881582264419500032:            #Please change this id to your game channel id
     await ctx.reply("Please go to gaming channel, I am waiting there...")
     return
   await ctx.reply('```By default quit time is 10 sec of inactivity```')
@@ -423,7 +424,7 @@ async def bonk(ctx, member : discord.Member=None, member1 : discord.Member=None)
 #=============Football========
 @client.command()
 async def football(ctx):
-  if ctx.message.channel.id != 881169094454419496:        #Please change this id to your channel id
+  if ctx.message.channel.id != 881582264419500032:        #Please change this id to your game channel id
     await ctx.reply("Please go to gaming channel, I am waiting there...")
     return
   options=["LEFT",'MIDDLE','RIGHT']
@@ -479,7 +480,7 @@ async def football(ctx):
 #=======GUESS===========
 @client.command()
 async def guess(ctx):
-    if ctx.message.channel.id != 881169094454419496:        #Please change this id to your channel id
+    if ctx.message.channel.id != 881582264419500032:        #Please change this id to your game channel id
       await ctx.reply("Please go to gaming channel, I am waiting there...")
       return
     ch=['Blue','Green','Red','Grey']
