@@ -1,6 +1,7 @@
 import discord
 import random
 import os
+import csv
 import paralleldots
 from datetime import datetime
 import asyncio
@@ -9,6 +10,9 @@ from discord_components import *
 from discord.ext.commands import bot
 from discord.utils import get
 from discord.ext import commands, tasks
+import json
+import requests
+
 
 intents = discord.Intents.default()    #please make sure that you have enabled the Intents in discord dev portal
 intents.members = True
@@ -90,7 +94,7 @@ def check_sentiment(message):
      return 0;    
 
 # Turn this to true if you dont want sentiment analysis
-disable_sentiment_analysis = False;
+disable_sentiment_analysis = True;
 
 @client.event
 async def on_ready():
@@ -118,6 +122,7 @@ async def on_message(message):
 
     if message.author.name in user_names:
        await message.add_reaction(Custom_emojis.get(message.author.name))
+    
     # Direct links of limbohacks for easy access with '!' prefix
     await auto_response(text.startswith('!website'),message,"https://limbohacks.tech/")
     await auto_response(text.startswith('!devpost'),message,"https://limbo-hacks-12968.devpost.com/")
@@ -136,34 +141,110 @@ async def auto_response(condition,message,content):
 async def auto_react(condition,message,content):
   if condition:
    await message.add_reaction(content)
+#===============LEVEL================
+@client.command()
+async def levels(ctx):
+    with open('level.json') as f:
+        users=json.load(f)
+        values = list(users.values())
+    new_dict = {}
+    for k, v in users.items():
+        new_dict.setdefault(v, []).append(k)
+    values=list(new_dict.values())
+    k=0
+    top_users=['```POINTS   PLAYERS```']
+    for i in values:
+        for j in i:
+            k+=1
+            if k >5:         #for top 5 users
+                break
+            top_users.append(f"```{users[j]}       {client.get_user(int(j))}```")
+    e1 = discord.Embed(title=" Leaderboard ", description='\n'.join(top_users),color=0x00FF00)
+    await ctx.send(embed=e1)
+    await ctx.reply(f"```Your points : {users[str(ctx.author.id)]}```")
 
+#===============HELP==================
+@client.command()
+async def help(ctx):
+  HELP=['**!website\n**:> Get official website\n','**!devpost\n**:> Get Devpost Link\n','**!discord\n**:> Discord server link\n','**!time\n**:> Time left for submission\n','**!games\n**:> Try amazing games']
+  embed=discord.Embed(title="Limbo Hacks",description=''.join(HELP),color=0x3498db)
+  await ctx.send(embed=embed)
+
+#================QUIZ==================
+@client.command()
+async def quiz(ctx):
+  e1 = discord.Embed(title=f"{ctx.author.name} , You Guessed It Right!", description="> You have scored! <",color=0x00FF00)
+  e2 = discord.Embed(title=f"{ctx.author.name} , You Lost!", description=f"> Try again <",color=discord.Color.red())
+  e3 = discord.Embed(title=f"{ctx.author.name}, You didn't Click on Time", description="> Timed Out! <",color=discord.Color.red())
+
+  url='https://opentdb.com/api.php?amount=1&category=18&difficulty=easy&type=multiple'
+  response=requests.get(url)
+  json_data=json.loads(response.text)
+  question=(list(json_data.values())[1][0]["question"])
+  p=(list(json_data.values())[1][0]["correct_answer"])
+  t=(list(json_data.values())[1][0]["incorrect_answers"])
+  t.append(p)
+  random.shuffle(t)
+
+  def check(res):
+      return ctx.author == res.user and res.channel == ctx.channel
+
+  e = discord.Embed(title=f"{ctx.author.name}'s QUIZ Game!", description=f"**Q) {question}**",color=0x3498db)
+  m = await ctx.reply(embed=e,components=[[Button(style=1, label=f"{t[0]}"),Button(style=3, label=f"{t[1]}"),Button(style=ButtonStyle.red,label=f"{t[2]}"),Button(style=ButtonStyle.grey,label=f"{t[3]}")]],)
+  try:
+    res = await client.wait_for("button_click", check=check, timeout=20)
+  except asyncio.TimeoutError:
+    await m.edit(embed=e3,components=[],)
+    return
+
+  if res.component.label==p:
+    with open('level.json') as f:
+            users=json.load(f)
+            if str(ctx.author.id) not in users:
+                users[str(ctx.author.id)]=1
+            if str(ctx.author.id) in users:
+                users[str(ctx.author.id)]+=3
+                e1.set_footer(text="Your gained 3 points", icon_url=ctx.author.avatar_url)
+                await m.edit(embed=e1,components=[],)
+            see(users)
+  else:
+    await m.edit(embed=e2,components=[],)
+
+#===========NEW USER FOR GAME==========
+def see(users):
+    with open('level.json','w') as fin:
+        json.dump(users,fin) 
 #================GAMES=================
-
 @client.command()
 async def games(ctx):
-  if ctx.message.channel.id != 881169094454419496:       #Please change this id to your game channel id
+  if ctx.message.channel.id != 881169094454419496:       #Please change this id to your channel id
     await ctx.reply("Please go to gaming channel, I am waiting there...")
     return
-  Game=['**!bonk\n**:> play Whac-A-Mole\n !bonk @member\n !bonk @member @member #for 3 players\n','**!rps\n**:> play Rock Paper Scissors\n','**!guess\n**:> Can you guess which colour is it ?\n','**!amongus\n**:> shhhhhhhhh!\n','**!football\n**:> Wanna goal ?']
+  Game=['**!bonk\n**:> play Whac-A-Mole\n !bonk @member\n !bonk @member @member #for 3 players\n','**!rps\n**:> play Rock Paper Scissors (2 points)\n','**!guess\n**:> Can you guess which colour is it ?(1 point)\n','**!amongus\n**:> shhhhhhhhh!(1 point)\n','**!football\n**:> Wanna goal ?(2 points)\n','**!quiz\n**:> Answer Answer Answer whooo...(3 points)\n']
   game=discord.Embed(title='Games', description =''.join(Game),color=0x3498db)
   await ctx.send(embed=game)
+  with open('level.json') as f:
+    users=json.load(f)
+    if str(ctx.author.id) not in users:
+        users[str(ctx.author.id)]=1
+    see(users)
 
 #=================AMONG US==============
 @client.command()
 async def amongus(ctx):
-    if ctx.message.channel.id != 881169094454419496:          #Please change this id to your game channel id
+    if ctx.message.channel.id != 881169094454419496:          #Please change this id to your channel id
       await ctx.reply("Please go to gaming channel, I am waiting there...")
       return
     ch=['Blue ඞ','Green ඞ','Red ඞ','grey ඞ']
     comp=random.choice(ch)
 
-    e = discord.Embed(title=f"{ctx.author}'s' amongus Game!", description="> Kill the imposter fast! <",color=0x3498db)
+    e = discord.Embed(title=f"{ctx.author.name}'s' amongus Game!", description="> Kill the imposter fast! <",color=0x3498db)
     
-    e1 = discord.Embed(title=f"{ctx.author}, You Guessed It Right!", description="> You have won! <",color=0x00FF00)
+    e1 = discord.Embed(title=f"{ctx.author.name}, You Guessed It Right!", description="> You have won! <",color=0x00FF00)
     
-    e3 = discord.Embed(title=f"{ctx.author}, You didn't Click on Time", description="> Timed Out! <",color=discord.Color.red())
+    e3 = discord.Embed(title=f"{ctx.author.name}, You didn't Click on Time", description="> Timed Out! <",color=discord.Color.red())
 
-    e2 = discord.Embed(title=f"{ctx.author}, You Lost!", description=f"> You have lost! < It was {comp}",color=discord.Color.red())
+    e2 = discord.Embed(title=f"{ctx.author.name}, You Lost!", description=f"> You have lost! < It was {comp}",color=discord.Color.red())
 
     m = await ctx.reply(
         embed=e,
@@ -178,8 +259,15 @@ async def amongus(ctx):
       res = await client.wait_for("button_click", check=check, timeout=5)
       
       if res.component.label==comp:
-        
-        await m.edit(embed=e1,components=[],)
+        with open('level.json') as f:
+            users=json.load(f)
+            if str(ctx.author.id) not in users:
+                users[str(ctx.author.id)]=1
+            if str(ctx.author.id) in users:
+                users[str(ctx.author.id)]+=1
+                e1.set_footer(text="Your gained 1 point", icon_url=ctx.author.avatar_url)
+                await m.edit(embed=e1,components=[],)
+            see(users)
       else: 
         await m.edit(embed=e2, components=[],)
     except asyncio.TimeoutError:
@@ -191,7 +279,7 @@ async def amongus(ctx):
 #=============Rock Paper Scissors========
 @client.command()
 async def rps(ctx):
-    if ctx.message.channel.id != 881169094454419496:             #Please change this id to your game channel id
+    if ctx.message.channel.id != 881169094454419496:             #Please change this id to your channel id
       await ctx.reply("Please go to gaming channel, I am waiting there...")
       return
     ch1 = ["Rock","Scissors","Paper"]
@@ -228,12 +316,27 @@ async def rps(ctx):
         await m.edit(embed=lost,components=[])
         
       if player=="Rock" and comp=="Scissors":
-        await m.edit(embed=win,components=[])
-      
+        with open('level.json') as f:
+            users=json.load(f)
+            if str(ctx.author.id) not in users:
+                users[str(ctx.author.id)]=1
+            if str(ctx.author.id) in users:
+                users[str(ctx.author.id)]+=2
+                win.set_footer(text="Your gained 2 points", icon_url=ctx.author.avatar_url)
+                await m.edit(embed=win,components=[])
+            see(users)
       
       if player=="Paper" and comp=="Rock":
-        await m.edit(embed=win,components=[])
-        
+        with open('level.json') as f:
+            users=json.load(f)
+            if str(ctx.author.id) not in users:
+                users[str(ctx.author.id)]=1
+            if str(ctx.author.id) in users:
+                users[str(ctx.author.id)]+=2
+                win.set_footer(text="Your gained 2 points", icon_url=ctx.author.avatar_url)
+                await m.edit(embed=win,components=[])
+            see(users)
+
       if player=="Paper" and comp=="Scissors":
         await m.edit(embed=lost,components=[])
         
@@ -242,8 +345,15 @@ async def rps(ctx):
         await m.edit(embed=lost,components=[])
         
       if player=="Scissors" and comp=="Paper":
-        await m.edit(embed=win,components=[])
-        
+        with open('level.json') as f:
+            users=json.load(f)
+            if str(ctx.author.id) not in users:
+                users[str(ctx.author.id)]=1
+            if str(ctx.author.id) in users:
+                users[str(ctx.author.id)]+=2
+                win.set_footer(text="Your gained 2 points", icon_url=ctx.author.avatar_url)
+                await m.edit(embed=win,components=[])
+            see(users)
 
     except asyncio.TimeoutError:
       await m.edit(
@@ -254,7 +364,7 @@ async def rps(ctx):
 #=========Whac-A-Mole===========
 @client.command(aliases=["wam", "whac"])
 async def bonk(ctx, member : discord.Member=None, member1 : discord.Member=None):
-  if ctx.message.channel.id != 881169094454419496:            #Please change this id to your game channel id
+  if ctx.message.channel.id != 881169094454419496:            #Please change this id to your channel id
     await ctx.reply("Please go to gaming channel, I am waiting there...")
     return
   await ctx.reply('```By default quit time is 10 sec of inactivity```')
@@ -313,7 +423,7 @@ async def bonk(ctx, member : discord.Member=None, member1 : discord.Member=None)
 #=============Football========
 @client.command()
 async def football(ctx):
-  if ctx.message.channel.id != 881169094454419496:        #Please change this id to your game channel id
+  if ctx.message.channel.id != 881169094454419496:        #Please change this id to your channel id
     await ctx.reply("Please go to gaming channel, I am waiting there...")
     return
   options=["LEFT",'MIDDLE','RIGHT']
@@ -322,9 +432,9 @@ async def football(ctx):
     if computerOption=='LEFT':
         return('.🧍‍♂️')
     if computerOption=='MIDDLE':
-        return ('⁃⁃⁃⁃⁃⁃🧍‍♂️⁃⁃⁃⁃⁃')
+        return ('⁃⁃⁃⁃⁃⁃⁃🧍‍♂️⁃⁃⁃⁃⁃')
     if computerOption=='RIGHT':
-        return ('⁃⁃⁃⁃⁃⁃⁃⁃⁃⁃⁃⁃🧍‍♂️')
+        return ('⁃⁃⁃⁃⁃⁃⁃⁃⁃⁃⁃⁃⁃🧍‍♂️')
 
   yet = discord.Embed(title=f"{ctx.author.display_name}'s PENALTY SHOOTOUT GAME",description=">status: Waiting for a click , 5 sec left" )
   yet.add_field(name=".🥅    🥅    🥅", value=goal() , inline=False)
@@ -350,7 +460,15 @@ async def football(ctx):
     elif missChance == 1:
       await m.edit(embed=miss,components=[])
     else :
-      await m.edit(embed=win,components=[])
+      with open('level.json') as f:
+            users=json.load(f)
+            if str(ctx.author.id) not in users:
+                users[str(ctx.author.id)]=1
+            if str(ctx.author.id) in users:
+                users[str(ctx.author.id)]+=2
+                win.set_footer(text="Your gained 2 points", icon_url=ctx.author.avatar_url)
+                await m.edit(embed=win,components=[])
+            see(users)
 
   except asyncio.TimeoutError:
     await m.edit(
@@ -361,40 +479,39 @@ async def football(ctx):
 #=======GUESS===========
 @client.command()
 async def guess(ctx):
-    if ctx.message.channel.id != 881169094454419496:        #Please change this id to your game channel id
+    if ctx.message.channel.id != 881169094454419496:        #Please change this id to your channel id
       await ctx.reply("Please go to gaming channel, I am waiting there...")
       return
-    ch=['Blue','Green','Red']
+    ch=['Blue','Green','Red','Grey']
     comp=random.choice(ch)
     
-    e = discord.Embed(title=f"{ctx.author}'s' Guessing Game!", description="> Click a button to choose! <",color=0x3498db)
-    
-    e1 = discord.Embed(title=f"{ctx.author}, You Guessed It Right!", description="> You have won! <",color=0x00FF00)
-    
-    e3 = discord.Embed(title=f"{ctx.author}, You didn't Click on Time", description="> Timed Out! <",color=discord.Color.red())
-
-    
-    e2 = discord.Embed(title=f"{ctx.author}, You Lost!", description=f"> You have lost! < It was {comp}",color=discord.Color.red())
+    e = discord.Embed(title=f"{ctx.author.name}'s' Guessing Game!", description="> Click a button to choose! <",color=0x3498db)
+    e1 = discord.Embed(title=f"{ctx.author.name}, You Guessed It Right!", description="> You have won! <",color=0x00FF00)
+    e3 = discord.Embed(title=f"{ctx.author.name}, You didn't Click on Time", description="> Timed Out! <",color=discord.Color.red())
+    e2 = discord.Embed(title=f"{ctx.author.name}, You Lost!", description=f"> You have lost! < It was {comp}",color=discord.Color.red())
 
     m = await ctx.reply(
         embed=e,
-        components=[[Button(style=1, label="Blue"),Button(style=3, label="Green"),Button(style=ButtonStyle.red,label="Red")]
+        components=[[Button(style=1, label="Blue"),Button(style=3, label="Green"),Button(style=ButtonStyle.red,label="Red"),Button(style=ButtonStyle.grey,label="Grey")]
         ],
     )
-
     def check(res):
         return ctx.author == res.user and res.channel == ctx.channel
-
     try:
         res = await client.wait_for("button_click", check=check, timeout=5)
-        
         if res.component.label==comp:
-          
-          await m.edit(embed=e1,components=[],)
+          with open('level.json') as f:
+            users=json.load(f)
+            if str(ctx.author.id) not in users:
+                users[str(ctx.author.id)]=1
+            if str(ctx.author.id) in users:
+                users[str(ctx.author.id)]+=1
+                e1.set_footer(text="Your gained 1 point", icon_url=ctx.author.avatar_url)
+                await m.edit(embed=e1,components=[],)
+            see(users)
         else: 
           await m.edit(embed=e2, components=[],)
           
-
     except asyncio.TimeoutError:
         await m.edit(
             embed=e3,
